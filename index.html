@@ -28,14 +28,14 @@
 
   try {
     document.getElementById('go').href = APP_URL;
-    var jumped = false;
-    try { jumped = sessionStorage.getItem('cyJumped') === '1'; } catch (e) {}
-    if (jumped) {
-      // 從工作台按「返回」回來：停在這頁，方便「加入主畫面」
-      document.getElementById('msg').innerHTML = '<p>要加到桌面：按分享 →「加入主畫面」</p>';
+    if (/[?&]go\b/.test(location.search)) {
+      // 從桌面圖示打開（網址帶 ?go）→ 直接跳工作台
+      location.replace(APP_URL);
     } else {
-      try { sessionStorage.setItem('cyJumped', '1'); } catch (e) {}
-      location.href = APP_URL;   // 用 href（不是 replace），按返回才回得來
+      // 直接輸入網址打開 → 停在這頁，並把網址偷偷改成 ?go，
+      // 這樣「加入主畫面」存下來的就是會自動跳轉的網址
+      history.replaceState(null, '', location.pathname + '?go');
+      document.getElementById('msg').innerHTML = '<p>按「…」→ 分享 →「加入主畫面」</p>';
     }
   } catch (e) {
     document.getElementById('msg').innerHTML = '<p>自動跳轉失敗：' + e.message + '，請點下面按鈕。</p>';
