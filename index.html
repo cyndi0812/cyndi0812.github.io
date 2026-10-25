@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyndi♡</title>
+<!-- 手機桌面圖示 -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<meta name="apple-mobile-web-app-title" content="Cyndi♡">
+<style>
+  body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
+       font-family:-apple-system,sans-serif;background:#f6f0fb;color:#5b3f99;text-align:center}
+  a{color:#9a6fc9}
+</style>
+</head>
+<body>
+<div id="msg">正在打開 My Work…<br><br><a id="go" href="#">沒有自動跳轉請點這裡</a></div>
+<script>
+  // ▼▼ 把下面網址換成你 Apps Script 網頁應用程式的網址（/exec 結尾）▼▼
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbxZYCkFNUJsSm7q0W7qHi5MN8m9WFvPB0NTnzFWeM7dZwjWGcpR6RCV26Z2ERYJaQk5/exec';
+
+  try {
+    if (APP_URL.indexOf('你的部署ID') > -1) throw new Error('還沒填入 Apps Script 網址');
+    document.getElementById('go').href = APP_URL;
+    location.replace(APP_URL);
+  } catch (e) {
+    document.getElementById('msg').textContent = '無法打開：' + e.message + '，請檢查 index.html 裡的 APP_URL。';
+  }
+</script>
+</body>
+</html>
