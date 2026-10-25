@@ -9,23 +9,36 @@
 <link rel="icon" type="image/png" href="icon-512.png">
 <meta name="apple-mobile-web-app-title" content="Cyndi♡">
 <style>
-  body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
-       font-family:-apple-system,sans-serif;background:#f6f0fb;color:#5b3f99;text-align:center}
-  a{color:#9a6fc9}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       font-family:-apple-system,sans-serif;background:#1a1240;color:#f3e9ff;text-align:center}
+  img{width:140px;height:140px;border-radius:32px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+  a.btn{display:inline-block;margin-top:22px;padding:12px 26px;border-radius:999px;
+        background:#ffb3d1;color:#3a2266;font-weight:700;text-decoration:none}
+  p{opacity:.75;font-size:14px}
 </style>
 </head>
 <body>
-<div id="msg">正在打開 My Work…<br><br><a id="go" href="#">沒有自動跳轉請點這裡</a></div>
+<div>
+  <img src="apple-touch-icon.png" alt="Cyndi">
+  <div id="msg"><p>正在打開工作台…</p></div>
+  <a class="btn" id="go" href="#">打開我的工作台 ♡</a>
+</div>
 <script>
-  // ▼▼ 把下面網址換成你 Apps Script 網頁應用程式的網址（/exec 結尾）▼▼
   var APP_URL = 'https://script.google.com/macros/s/AKfycbxZYCkFNUJsSm7q0W7qHi5MN8m9WFvPB0NTnzFWeM7dZwjWGcpR6RCV26Z2ERYJaQk5/exec';
 
   try {
-    if (APP_URL.indexOf('你的部署ID') > -1) throw new Error('還沒填入 Apps Script 網址');
     document.getElementById('go').href = APP_URL;
-    location.replace(APP_URL);
+    var jumped = false;
+    try { jumped = sessionStorage.getItem('cyJumped') === '1'; } catch (e) {}
+    if (jumped) {
+      // 從工作台按「返回」回來：停在這頁，方便「加入主畫面」
+      document.getElementById('msg').innerHTML = '<p>要加到桌面：按分享 →「加入主畫面」</p>';
+    } else {
+      try { sessionStorage.setItem('cyJumped', '1'); } catch (e) {}
+      location.href = APP_URL;   // 用 href（不是 replace），按返回才回得來
+    }
   } catch (e) {
-    document.getElementById('msg').textContent = '無法打開：' + e.message + '，請檢查 index.html 裡的 APP_URL。';
+    document.getElementById('msg').innerHTML = '<p>自動跳轉失敗：' + e.message + '，請點下面按鈕。</p>';
   }
 </script>
 </body>
