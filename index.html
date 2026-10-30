@@ -2,43 +2,38 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cyndi♡</title>
 <!-- 手機桌面圖示 -->
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-512.png">
 <meta name="apple-mobile-web-app-title" content="Cyndi♡">
+<!-- 從桌面打開時全螢幕（沒有網址列、工具列） -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1240">
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       font-family:-apple-system,sans-serif;background:#1a1240;color:#f3e9ff;text-align:center}
-  img{width:140px;height:140px;border-radius:32px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
-  a.btn{display:inline-block;margin-top:22px;padding:12px 26px;border-radius:999px;
-        background:#ffb3d1;color:#3a2266;font-weight:700;text-decoration:none}
-  p{opacity:.75;font-size:14px}
+  html,body{margin:0;height:100%;background:#1a1240;overflow:hidden}
+  #app{position:fixed;inset:0;width:100%;height:100%;border:0;padding-top:env(safe-area-inset-top);box-sizing:border-box;background:#1a1240}
+  #tip{position:fixed;left:0;right:0;bottom:max(12px,env(safe-area-inset-bottom));text-align:center;font:13px -apple-system,sans-serif;color:#f3e9ff;opacity:0;transition:opacity .4s;pointer-events:none}
+  #tip a{color:#ffb3d1;pointer-events:auto}
 </style>
 </head>
 <body>
-<div>
-  <img src="apple-touch-icon.png" alt="Cyndi">
-  <div id="msg"><p>正在打開工作台…</p></div>
-  <a class="btn" id="go" href="#">打開我的工作台 ♡</a>
-</div>
+<iframe id="app" title="My Work" allow="clipboard-read; clipboard-write; notifications"></iframe>
+<div id="tip">打不開嗎？<a id="go" href="#">點這裡直接打開工作台</a></div>
 <script>
   var APP_URL = 'https://script.google.com/macros/s/AKfycbxZYCkFNUJsSm7q0W7qHi5MN8m9WFvPB0NTnzFWeM7dZwjWGcpR6RCV26Z2ERYJaQk5/exec';
-
   try {
     document.getElementById('go').href = APP_URL;
-    if (/[?&]go\b/.test(location.search)) {
-      // 從桌面圖示打開（網址帶 ?go）→ 直接跳工作台
-      location.replace(APP_URL);
-    } else {
-      // 直接輸入網址打開 → 停在這頁，並把網址偷偷改成 ?go，
-      // 這樣「加入主畫面」存下來的就是會自動跳轉的網址
-      history.replaceState(null, '', location.pathname + '?go');
-      document.getElementById('msg').innerHTML = '<p>按「…」→ 分享 →「加入主畫面」</p>';
-    }
+    document.getElementById('app').src = APP_URL;
+    // 10 秒後還在載入／空白時，顯示「直接打開」的備用連結
+    var loaded = false;
+    document.getElementById('app').onload = function(){ loaded = true; };
+    setTimeout(function(){ if(!loaded) document.getElementById('tip').style.opacity = 1; }, 10000);
   } catch (e) {
-    document.getElementById('msg').innerHTML = '<p>自動跳轉失敗：' + e.message + '，請點下面按鈕。</p>';
+    document.body.innerHTML = '<p style="color:#fff;padding:20px">無法打開：' + e.message + '　<a style="color:#ffb3d1" href="' + APP_URL + '">直接打開工作台</a></p>';
   }
 </script>
 </body>
